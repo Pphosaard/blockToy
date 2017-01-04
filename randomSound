@@ -1,0 +1,46 @@
+#include <TMRpcm.h>
+
+#include <SPI.h>
+#include <SD.h>
+
+char mychar;
+const int CS_PIN = 10;
+int inPin = 8;   // choose the input pin (for a pushbutton)
+int val = 0;     // variable for reading the pin status
+int count = 0; // count NO. of sound
+TMRpcm tmrpcm;
+
+
+void setup() {
+  tmrpcm.speakerPin = 9;
+  pinMode(inPin, INPUT);// declear pushbutton as an input
+  
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  Serial.println("Initializing Card");
+  pinMode(CS_PIN, OUTPUT);
+  if(!SD.begin(CS_PIN)) {
+    Serial.println("Card Failure");
+    return;
+  }
+  Serial.println("Card Ready");
+  
+}
+
+void loop() {
+  val = digitalRead(inPin);
+  if (val ==LOW && count == 0){ //check if the input is HIGH (button released)
+      tmrpcm.play("f1.wav");
+      count = 1;
+    }else if (val ==LOW && count == 1){ //check if the input is HIGH (button released)
+      tmrpcm.play("f2.wav");
+      count = 2;
+    }else if (val ==LOW && count == 2){ //check if the input is HIGH (button released)
+      tmrpcm.play("f3.wav");
+      count = 0;
+    }else {
+      
+      }
+    
+  
+}
