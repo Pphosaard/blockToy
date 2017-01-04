@@ -1,3 +1,14 @@
+// Title : random sounds by pushing the button (Arduino)
+
+/*
+PROBLEMS
+1. The cons is you cannot avoid pushing repeatly or push a button and hold it for a while
+    You should fixed the error!!
+2. Cannot set the volumn 
+ 
+ */
+
+
 #include <TMRpcm.h>
 
 #include <SPI.h>
@@ -30,16 +41,25 @@ void setup() {
 void loop() {
   val = digitalRead(inPin);
   if (val ==LOW && count == 0){ //check if the input is HIGH (button released)
+     
       tmrpcm.play("f1.wav");
-      count = 1;
+       count = 1;
+       delay(100);
+      
     }else if (val ==LOW && count == 1){ //check if the input is HIGH (button released)
+     
       tmrpcm.play("f2.wav");
-      count = 2;
+       count = 2;
+       delay(100);
+      
     }else if (val ==LOW && count == 2){ //check if the input is HIGH (button released)
+      
       tmrpcm.play("f3.wav");
       count = 0;
-    }else {
+      delay(100);
       
+    }else {
+       delay(100);
       }
     
   
