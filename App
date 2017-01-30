@@ -1,0 +1,933 @@
+package com.example.mzaic.try2;
+import com.example.mzaic.try2.R;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothSocket;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Locale;
+
+import android.content.Intent;
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.UUID;
+
+import android.speech.tts.TextToSpeech;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.view.Menu;
+import android.view.View;
+
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+    //private TextToSpeech tts;
+    private TextView txtSpeechInput;
+    private Button btnSpeak;
+   // Button btnOn, btnOff, btnDis;
+    private final int REQ_CODE_SPEECH_INPUT = 100;
+    //
+    //define state inputs HERE
+    private int state;
+    private int statusF;
+    private int statusG;
+    private int statusR;
+    private int statusGo;
+    private int statusP;
+    private int statusO;
+    private int count34;
+    private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
+    private float mPreviousX;
+    private float mPreviousY;
+
+
+
+    //
+    //SeekBar brightness;
+    //TextView lumn;
+   // String address = null;
+   /* private ProgressDialog progress;
+    BluetoothAdapter myBluetooth = null;
+    BluetoothSocket btSocket = null;
+    private boolean isBtConnected = false;
+    //SPP UUID. Look for it
+    static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    DeviceList testA = new DeviceList();
+    ledControl testB = new ledControl();*/
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+    private int height;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        btnSpeak = (Button) findViewById(R.id.btnSpeak);
+        txtSpeechInput = (TextView) findViewById(R.id.txtSpeechInput);
+
+        //btnOn = (Button)findViewById(R.id.button2);
+        //btnOff = (Button)findViewById(R.id.button3);
+        //btnDis = (Button)findViewById(R.id.button4);
+        // tts = new TextToSpeech(this, this, "com.google.android.tts");
+
+        // hide the action bar
+        //getActionBar().hide();
+        state = 0; // initialize the state
+
+        int statusF = 100;
+        int statusG = 100;
+        int statusR = 100;
+        int statusGo = 100;
+        int statusP = 100;
+        int statusO = 100;
+        count34 = 0;
+        /*status[0] = FOX
+        1 = Girl
+        2 = Rabbit
+        3 = God
+        4 = Princess
+        5 = Owe
+        6 = ...
+
+
+        */
+        btnSpeak.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                promptSpeechInput();
+            }
+        });
+       /* btnOn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                turnOnLed();      //method to turn on
+            }
+        });
+
+        btnOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                turnOffLed();   //method to turn off
+            }
+        });
+
+        btnDis.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Disconnect(); //close connection
+            }
+        });*/
+
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+       // Intent newint = getIntent();
+       // address = newint.getStringExtra(DeviceList.EXTRA_ADDRESS); //receive the address of the bluetooth device
+
+        //view of the ledControl
+      /*  setContentView(R.layout.activity_led_control);
+
+        //call the widgtes
+
+        brightness = (SeekBar)findViewById(R.id.seekBar);
+        lumn = (TextView)findViewById(R.id.lumn);
+
+        new ConnectBT().execute(); //Call the class to connect
+
+        //commands to be sent to bluetooth
+
+
+        brightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser==true)
+                {
+                    lumn.setText(String.valueOf(progress));
+                    try
+                    {
+                        btSocket.getOutputStream().write(String.valueOf(progress).getBytes());
+                    }
+                    catch (IOException e)
+                    {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });*/
+    }
+
+    /**
+     * Showing google speech input dialog
+     */
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "th-TH"); //to Thai language
+        //Upper line can be solve by setting in the phone
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                getString(R.string.speech_prompt));
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.speech_not_supported),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Receiving speech input
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    txtSpeechInput.setText(result.get(0));
+                    playSound(speakUp(result.get(0)));
+                    // MyTTS.getInstance(this).setEngine("com.google.android.tts").setLocale(new Locale("th")).speak(speakUp(result.get(0)));
+                    //** I could change this, cause we not use the TTS generate any output BUT use my voice instead
+                    //** Or if TTS is fast enough then we can use it
+                    // Delay(x); // x--> Depend on How long you speak
+
+                }
+                break;
+            }
+
+        }
+    }
+    public void playSound (int code){
+        MediaPlayer mp ;
+        int d=0;
+        if(code != -1) {
+            switch (code) {
+                case 0:
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state000); //Perhaps random the sentences here!
+
+                    d = 4000;
+                    break;
+                case 1: // สวัสดี -->
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state0_0);
+                    d = 14000;
+                    break;
+                case 3:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state0_3);
+                    d = 19000;
+                    break;
+                case 101:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state1_1);
+                    d = 14000;
+
+                    break;
+                case 102:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state1_2);
+                    d = 7000;
+
+                    break;
+                case 103:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state1_3);
+                    d = 6000;
+
+                    break;
+                case 104:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state1_4);
+                    d = 6000;
+
+                    break;
+               /* case 105:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state0);//!!
+                   // d = 6000;
+
+                    break;
+                case 106:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state0);//!!
+                    // d = 6000;
+
+                    break;*/
+                case 107:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state1_7);
+                    d = 12000;
+
+                    break;
+                case 108:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state1_8);
+                    d = 15000;
+
+                    break;
+                case 201:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state2_1);
+                    d = 4000;
+
+                    break;
+                case 202:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state2_2);
+                    d = 2000;
+
+                    break;
+                case 203:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state2_3);
+                    d = 4000;
+
+                    break;
+               case 3401:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.story_1);
+                    d = 29000;
+
+                    break;
+                case 3402:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.story_2);
+                    d = 19000;
+
+                    break;
+                case 3403:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.story_3);
+                    d = 52000;
+
+                    break;
+                case 34041:  //Say YES
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.story_6);
+                    d = 50000;
+
+                    break;
+                case 34042:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.story_4);
+                    d = 50000;
+
+                    break;
+                case 34043:  //
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.story_5);
+                    d = 50000;
+
+                    break;
+                default:
+                    mp = MediaPlayer.create(getApplicationContext(), R.raw.state0);// 0 sec SAY NOTHING
+
+                    break;
+            }
+            mp.start();
+            try {
+                Thread.sleep(d);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            mp.stop();
+        }else { //if (code == 0) Do nothing
+
+        }
+    }
+    public int checkCombination (){
+        /*
+        * Check the combination from bluetooth!!
+        * */
+
+
+        return 0; // return storyCode na ex. 34 or 12
+    }
+
+    // Create the metod for TTS by MY VOICE
+
+    public int speakUp(String result) {
+        //check word and response
+        //Setting the state!!!
+        /*
+        * Code for the stories
+        * 1 = FOX
+        * 2 = GIRL (Som)
+        * 3 = GOD
+        * 4 = PRINCESS
+        *
+        * 12 = FOX & GIRL --> A kid who pets the cheeps
+        *
+        * */
+        int storyCode = 0;
+        //String ans = "";
+        // HERE  Check bluetooth is activating or not? if YES --> state = 99
+        storyCode = checkCombination();
+
+        if (result.isEmpty()) { return -1;
+        }else if(state == 0){
+
+            //initial the APP --> Say Hi or Hello
+            if(result.equals("สวัสดี")){return 1;}
+            //else if(result.equals("ช่วยอะไร") || result.equals("ช่วยยังไง") || result.equals("อะไร")){return 102;}//return "ง่ายมากเพื่อน เธอต้องช่วยชั้นหาตัวละครในนิทานที่หายไป พาเขากลับไปยังโลกนิทาน เธอพร้อมเมื่อไรให้พูดว่า พร้อม เธอยินดีจะช่วยชั้นใช่มั้ย";}
+            else if(result.equals("ช่วยอะไร")||result.equals("ยังไง")  || result.equals("ช่วยยังไง") || result.equals("อะไร") || result.equals("อืม")||result.equals("ใช่")||result.equals("ค่ะ") ){ //!!change the code!!! Not exact word but have a part of the matched word!!!
+                state = 1;
+
+                return 3;
+            }
+
+        /*พร้อม is a word that hard to pronounce and easy to get it wrong. I pronounce it three times 1st is ท้อง 2nd is ร้อง Quite hard to pay attention to pronounce it */
+        }else if(state == 1){
+            if(statusGo == 10 && statusP == 10){state = 2; return 123412;} //just go to say nothing
+            else if (statusF == 10){state = 3;}
+            else {state = 1;}
+            //Some of characters are in a hole
+            switch (result) {
+                case "":
+                    //return ""; //Some conversation
+                    return 0;
+                case "เพื่อนของเธอมีใครบ้าง":
+                    return 101;
+                case "มีใครบ้าง":
+                    //return "มีทั้งคน ทั้งสัตว์ ทั้งเทพารักษ์เลยล่ะ พวกเขาหายตัวไปหลายคนมาก หนึ่งในนั้นคือหมาป่า พวกเขาหายตัวไป ทำให้โลกนิทานเงียบเหงาไปมาก";
+                    return 101;
+
+                case "ฉันจะหาพวกเขาได้ที่ไหน":
+                    return 102;
+                case "หาพวกเขาได้ที่ไหน":
+                    return 102;
+                case "หาที่ไหน":
+                    return 102;
+
+                case "เย้":
+                    return 103;
+                case "เอาเลย":
+                    return 103;
+                case "เย้เย้":
+                    return 103;
+                case "เจอหมาป่า":
+
+                    statusF = 10;
+                    return 104;
+                case "หมาป่า":
+
+                    statusF = 10;
+                    return 104;
+               /* case "เจอกระต่าย":
+                    state = 2;
+                    statusR = 0;
+                    return 105;
+                case "เจอเด็กหญิง":
+                    state = 2;
+                    statusG = 0;
+                    return 106;*/
+                case "เจอเจ้าหญิง":
+
+                    statusP = 10;
+
+                    return 107;
+                case "เจ้าหญิง":
+
+                    statusP = 10;
+
+                    return 107;
+                case "เจอเทพารักษ์":
+
+                    statusGo = 10;
+                    return 108;
+                case "เทพารักษ์":
+
+                    statusGo = 10;
+                    return 108;
+                case "เจ้าหญิงกับเทพารักษ์":
+                    state = 2;
+                    return 134145; //whatever to say nothing
+                case "เลขเลข":
+                    state = 0;
+                    return 0;
+                default:
+                    //if 10 sec past
+                    return 0;
+                // return "เพื่อนๆของชั้นจากโลกนิทานหายตัวไป แต่ชั้นคิดว่าเขาไม่ได้ไปไหนไกล เทอลองหาพวกเขาจากบริเวณใกล้ๆก่อนสิ";
+                // should be random --> has lots of conversation pattern
+            }
+
+
+        }else if(state == 2){
+            //Find some combination  +  Check storyCode
+            // depend on the combination we have
+            if(statusGo == 10 && statusP ==10){
+                if(result.equals("อยาก")){state = 34;return 202;}
+                else if(result.equals("ไม่")|| result.equals("ไม่อยาก")){
+                    state = 3;
+                    return 203;
+
+                }
+                else {
+                    state = 2;
+                    return 201;}
+            }else if(result.equals("เลขแรก")){
+                state =1;
+                return 0;
+
+
+            }
+            else{
+                state = 3;
+                return 0;
+
+            }
+
+
+            // return "";
+
+        }else if(state == 3){
+            //check each charactor not the combinition
+            switch (result) {
+                case "":
+                    //return ""; //Some conversation
+                    return 0;
+                case "เพื่อนของเธอมีใครบ้าง":
+                    return 101;
+                case "มีใครบ้าง":
+                    //return "มีทั้งคน ทั้งสัตว์ ทั้งเทพารักษ์เลยล่ะ พวกเขาหายตัวไปหลายคนมาก หนึ่งในนั้นคือหมาป่า พวกเขาหายตัวไป ทำให้โลกนิทานเงียบเหงาไปมาก";
+                    return 101;
+
+                case "ฉันจะหาพวกเขาได้ที่ไหน":
+                    return 102;
+                case "หาพวกเขาได้ที่ไหน":
+                    return 102;
+                case "หาที่ไหน":
+                    return 102;
+
+                case "เย้":
+                    return 103;
+                case "เอาเลย":
+                    return 103;
+                case "เย้เย้":
+                    return 103;
+                case "เจอหมาป่า":
+
+                    statusF = 10;
+                    return 104;
+                case "หมาป่า":
+
+                    statusF = 10;
+                    return 104;
+               /* case "เจอกระต่าย":
+                    state = 2;
+                    statusR = 0;
+                    return 105;
+                case "เจอเด็กหญิง":
+                    state = 2;
+                    statusG = 0;
+                    return 106;*/
+                case "เจอเจ้าหญิง":
+
+                    statusP = 10;
+
+                    return 107;
+                case "เจ้าหญิง":
+
+                    statusP = 10;
+
+                    return 107;
+                case "เจอเทพารักษ์":
+
+                    statusGo = 10;
+                    return 108;
+                case "เทพารักษ์":
+
+                    statusGo = 10;
+                    return 108;
+                case "เลขเลข":
+                    state = 0;
+                    return 0;
+                default:
+                    //if 10 sec past
+                    return 0;
+                // return "เพื่อนๆของชั้นจากโลกนิทานหายตัวไป แต่ชั้นคิดว่าเขาไม่ได้ไปไหนไกล เทอลองหาพวกเขาจากบริเวณใกล้ๆก่อนสิ";
+                // should be random --> has lots of conversation pattern
+            }
+
+            //return "";
+
+        }else if(state == 100){//State for fox
+            switch (result) {
+
+                default:
+                    //if 10 sec past
+                    return 0;
+                // return "เพื่อนๆของชั้นจากโลกนิทานหายตัวไป แต่ชั้นคิดว่าเขาไม่ได้ไปไหนไกล เทอลองหาพวกเขาจากบริเวณใกล้ๆก่อนสิ";
+                // should be random --> has lots of conversation pattern
+            }
+            //return "";
+
+        }else if(state == 101){//State for Girl
+            switch (result) {
+
+                default:
+                    //if 10 sec past
+                    return 0;
+                // return "เพื่อนๆของชั้นจากโลกนิทานหายตัวไป แต่ชั้นคิดว่าเขาไม่ได้ไปไหนไกล เทอลองหาพวกเขาจากบริเวณใกล้ๆก่อนสิ";
+                // should be random --> has lots of conversation pattern
+            }
+            //return "";
+
+        }else if(state == 102){//State for Rabbit
+            switch (result) {
+
+                default:
+                    //if 10 sec past
+                    return 0;
+                // return "เพื่อนๆของชั้นจากโลกนิทานหายตัวไป แต่ชั้นคิดว่าเขาไม่ได้ไปไหนไกล เทอลองหาพวกเขาจากบริเวณใกล้ๆก่อนสิ";
+                // should be random --> has lots of conversation pattern
+            }
+            //return "";
+
+        }else if(state == 103){//State for God
+            switch (result) {
+
+                default:
+                    //if 10 sec past
+                    return 0;
+                // return "เพื่อนๆของชั้นจากโลกนิทานหายตัวไป แต่ชั้นคิดว่าเขาไม่ได้ไปไหนไกล เทอลองหาพวกเขาจากบริเวณใกล้ๆก่อนสิ";
+                // should be random --> has lots of conversation pattern
+            }
+            //return "";
+
+        }else if(state == 104){//State for Princess
+            switch (result) {
+
+                default:
+                    //if 10 sec past
+                    return 0;
+                // return "เพื่อนๆของชั้นจากโลกนิทานหายตัวไป แต่ชั้นคิดว่าเขาไม่ได้ไปไหนไกล เทอลองหาพวกเขาจากบริเวณใกล้ๆก่อนสิ";
+                // should be random --> has lots of conversation pattern
+            }
+            //return "";
+
+        }
+
+        else if(state == 12){
+            // เด็กเลี้ยงแกะ
+            //return "";
+            switch (result) {
+
+                default:
+                    //if 10 sec past
+                    return 0;
+                // return "เพื่อนๆของชั้นจากโลกนิทานหายตัวไป แต่ชั้นคิดว่าเขาไม่ได้ไปไหนไกล เทอลองหาพวกเขาจากบริเวณใกล้ๆก่อนสิ";
+                // should be random --> has lots of conversation pattern
+            }
+        }else if(state == 34){
+            //เทพารักษ์กะขวาน บลาๆ
+            if(count34 ==0) {
+                if(result.isEmpty()){count34 = 1; return 3401;}
+                else {count34 = 1; return 3401;}
+            }else if(count34 == 1){
+                if(result.isEmpty()){return 0;}
+                else {count34 =2; return 3402;}
+
+            }else if(count34 == 2){
+                if(result.isEmpty()){return 0;}
+                else {count34 =3; return 3403;}
+
+            }else {
+                if (count34 == 3) {
+                    if (result.isEmpty()) {
+                        return 0;
+                    } else if (result.equals("ใช่") || result.equals("น่าจะใช่") || result.equals("ชัวร์")) {
+                        count34 = 0;
+                        state = 3;
+                        return 34041;
+                    } else if (result.equals("ไม่") || result.equals("ไม่ใช่")) {
+                        count34 = 0;
+                        state = 3;
+                        return 34042;
+                    } else {
+                        count34 = 0;
+                        state = 3;
+                        return 34043;
+                    }
+
+                } else {
+                    count34 = 0;
+                    return 0;
+                }
+            }
+            //return "";
+        }else if(state == 99){
+
+            //return "";
+            switch (result) {
+
+                default:
+                    //if 10 sec past
+                    return 0;
+                // return "เพื่อนๆของชั้นจากโลกนิทานหายตัวไป แต่ชั้นคิดว่าเขาไม่ได้ไปไหนไกล เทอลองหาพวกเขาจากบริเวณใกล้ๆก่อนสิ";
+                // should be random --> has lots of conversation pattern
+            }
+        }else{
+           // return  "เธอพูดใหม่อีกรอบได้มั้ย ชั้นไม่เข้าใจที่เธอพูด";
+            return 0;
+        }
+        return 0;
+        //return "";
+      /*  if (result.isEmpty()) {
+        } else if (result.equals("สวัสดี")) {
+            ans = "สวัสดีเด็กน้อย";
+        } else if (result.equals("เธออยู่ไหน")) {
+            ans = "ชั้นอยู่นี่";
+
+        } else if (result.equals("เธอคือใคร")) {
+            ans = "ชั้นคือเพื่อนของเธอ";
+        } else if (result.equals("ใครอ่ะ")) {
+            ans = "ชั้นเอง จำไม่ได้หรอ";
+        } else if (result.equals("อาจารย์อติวงศ์คือใคร")) {
+            ans = "คนที่ใจดีใจดีไง";
+        } else if (result.equals("ช้าไปนะ")) {
+            ans = "เราจะพยายามเป็นคนที่ดีกว่านี้";
+
+        } else if (result.equals("where are you")) {
+            ans = "I am here";
+        } else if (result.equals("hi")) {
+            ans = "Hi there";
+        } else {
+            ans = result; //Please be aware of the unreadable result! it might cause an error!!!
+        }*/
+
+
+       // return ans;
+    }
+ /*   private void Disconnect()
+    {
+        if (btSocket!=null) //If the btSocket is busy
+        {
+            try
+            {
+                btSocket.close(); //close connection
+            }
+            catch (IOException e)
+            { msg("Error");}
+        }
+        finish(); //return to the first layout
+
+    }
+
+    private void turnOffLed()
+    {
+        if (btSocket!=null)
+        {
+            try
+            {
+                btSocket.getOutputStream().write("0".toString().getBytes());
+            }
+            catch (IOException e)
+            {
+                msg("Error");
+            }
+        }
+    }
+
+    private void turnOnLed()
+    {
+        if (btSocket!=null)
+        {
+            try
+            {
+                btSocket.getOutputStream().write("1".toString().getBytes());
+            }
+            catch (IOException e)
+            {
+                msg("Error");
+            }
+        }
+    }
+*/
+    // fast way to call Toast
+
+    public boolean onTouchEvent(MotionEvent e) { //just add
+        // MotionEvent reports input details from the touch screen
+        // and other input controls. In this case, you are only
+        // interested in events where the touch position changed.
+
+        float x = e.getX();
+        float y = e.getY();
+
+        switch (e.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+
+                float dx = x - mPreviousX;
+                float dy = y - mPreviousY;
+
+                // reverse direction of rotation above the mid-line
+                if (y > getHeight() / 2) {
+                    dx = dx * -1;
+                }
+
+                // reverse direction of rotation to left of the mid-line
+                if (x < getWidth() / 2) {
+                    dy = dy * -1;
+                }
+
+                mRenderer.setAngle(
+                        mRenderer.getAngle() +
+                                ((dx + dy) * TOUCH_SCALE_FACTOR));
+                requestRender();
+        }
+
+        mPreviousX = x;
+        mPreviousY = y;
+        return true;
+    }
+
+    private void msg(String s)
+    {
+        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu); //error here
+
+       // testA.pairedDevicesList();
+
+
+        return true;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.mzaic.try2/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.mzaic.try2/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+
+    public int getHeight() {
+        return height;
+    }
+   /* public class ConnectBT extends AsyncTask<Void, Void, Void>  // UI thread
+    {
+        private boolean ConnectSuccess = true; //if it's here, it's almost connected
+
+        @Override
+        protected void onPreExecute()
+        {
+            progress = ProgressDialog.show(MainActivity.this, "Connecting...", "Please wait!!!");  //show a progress dialog
+        }
+
+        @Override
+        protected Void doInBackground(Void... devices) //while the progress dialog is shown, the connection is done in background
+        {
+            try
+            {
+                if (btSocket == null || !isBtConnected)
+                {
+                    myBluetooth = BluetoothAdapter.getDefaultAdapter();//get the mobile bluetooth device
+                    BluetoothDevice dispositivo = myBluetooth.getRemoteDevice(address);//connects to the device's address and checks if it's available
+                    btSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(myUUID);//create a RFCOMM (SPP) connection
+                    BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+                    btSocket.connect();//start connection
+                }
+            }
+            catch (IOException e)
+            {
+                ConnectSuccess = false;//if the try failed, you can check the exception here
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) //after the doInBackground, it checks if everything went fine
+        {
+            super.onPostExecute(result);
+
+            if (!ConnectSuccess)
+            {
+                msg("Connection Failed. Is it a SPP Bluetooth? Try again.");
+                finish();
+            }
+            else
+            {
+                msg("Connected.");
+                isBtConnected = true;
+            }
+            progress.dismiss();
+        }
+    }*/
+
+}
