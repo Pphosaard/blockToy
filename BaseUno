@@ -1,0 +1,186 @@
+// for base --> 1st can speak when be activated!(Send to Arduino MINI na)
+// 2nd --> Know who is interacting with
+// 3rd --> Send BLUETOOTH!!!!!!!!!!
+
+// 6 sensors then another arduino 6 sensors
+int s13 = 13;
+int s12 = 12;
+int s11 = 11;
+int s10 = 10;
+int s9  = 9;
+int s8  = 8;
+int s7 = 7;
+int s6 = 6;
+int s5 = 5;
+int s4 = 4;
+int s3 = 3;
+int s2 = 2;
+int count13 = 0;
+int count12 = 0;
+int count11 = 0;
+int count10 = 0;
+int count9 = 0;
+int count8 = 0;
+int count7 = 0;
+int count6 = 0;
+int count5 = 0;
+int count4 = 0;
+int count3 = 0;
+int count2 = 0;
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(s13, INPUT);
+  pinMode(s12, INPUT);
+  pinMode(s11, INPUT);
+  pinMode(s10, INPUT);
+  pinMode(s9, INPUT);
+  pinMode(s8, INPUT);
+  pinMode(s7, INPUT);
+  pinMode(s6, INPUT);
+  pinMode(s5, INPUT);
+  pinMode(s4, INPUT);
+  pinMode(s3, INPUT);
+  pinMode(s2, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  //
+  count13 = digitalRead(s13);
+  count12 = digitalRead(s12);
+  count11 = digitalRead(s11);
+  count10 = digitalRead(s10);
+  count9 = digitalRead(s9);
+  count8 = digitalRead(s8);
+  count7 = digitalRead(s7);
+  count6 = digitalRead(s6);
+  count5 = digitalRead(s5);
+  count4 = digitalRead(s4);
+  count3 = digitalRead(s3);
+  count2 = digitalRead(s2);
+  if (Serial.available() > 0)
+  {
+   
+  }
+
+/*
+For avioding the mistakes which could probably happen, should add 2-ways communication!
+
+*/
+  
+  while (Serial.available() > 0) { //A0 - A5 send data to 
+    //Base 1 --> Forest
+    if (count13 == 1 && count12 == 1 && count11 == 1) { //PS. "1" means  No activate
+      // Normal state
+      /*
+      TRY THIS FIRST!!! then copy to others!  
+      */
+      Serial.println(1000); // Is it work?
+      delay(1000);
+      int ans = Serial.read();
+      delay(1000);
+      if(ans == 9999){}
+      else if (ans == 3333){
+        Serial.println(1000); // Is it work?
+      delay(1000);
+        }
+    } else if (count13 == 1 && count12 == 1 && count11 != 1) {
+      //FOX
+      Serial.println(1111);
+      delay(1000);
+
+    } else if (count13 != 1 && count12 == 1 && count11 == 1) {
+      //GOD
+      Serial.println(1133);
+      delay(1000);
+    } else if (count13 == 1 && count12 != 1 && count11 == 1) {
+      //PRINCESS
+       Serial.println(1144);
+      delay(1000);
+    } else if (count13 != 1 && count12 == 1 && count11 != 1) {
+      //GIRL
+       Serial.println(1122);
+      delay(1000);
+
+    }
+
+
+    // BASE2 : Villa
+    if (count10 == 1 && count9 == 1 && count8 == 1) { //PS. "1" means  No activate
+      // Normal state
+       Serial.println(2000);
+      delay(1000);
+    } else if (count10 == 1 && count9 == 1 && count8 != 1) {
+      //FOX
+      Serial.println(2011);
+      delay(1000);
+
+    } else if (count10 != 1 && count9 == 1 && count8 == 1) {
+      //GOD
+      Serial.println(2033);
+      delay(1000);
+    } else if (count10 == 1 && count9 != 1 && count8 == 1) {
+      //PRINCESS
+      Serial.println(2044);
+      delay(1000);
+    } else if (count10 != 1 && count9 == 1 && count8 != 1) {
+      //GIRL
+       Serial.println(2022);
+      delay(1000);
+
+    }
+    // BASE3 : RIVER
+    if (count7 == 1 && count6 == 1 && count5 == 1) { //PS. "1" means  No activate
+      // Normal state
+      Serial.println(3000);
+      delay(1000);
+    } else if (count7 == 1 && count6 == 1 && count5 != 1) {
+      //FOX
+        Serial.println(3011);
+      delay(1000);
+
+    } else if (count7 != 1 && count6 == 1 && count5 == 1) {
+      //GOD
+        Serial.println(3033);
+      delay(1000);
+    } else if (count7 == 1 && count6 != 1 && count5 == 1) {
+      //PRINCESS
+        Serial.println(3044);
+      delay(1000);
+
+    } else if (count7 != 1 && count6 == 1 && count5 != 1) {
+      //GIRL
+        Serial.println(3022);
+      delay(1000);
+
+    }
+    // BASE4 : CASTLE
+    if (count4 == 1 && count3 == 1 && count2 == 1) { //PS. "1" means  No activate
+      // Normal state
+        Serial.println(4000);
+      delay(1000);
+    } else if (count4 == 1 && count3 == 1 && count2 != 1) {
+      //FOX
+       Serial.println(4011);
+      delay(1000);
+      
+    } else if (count4 != 1 && count3 == 1 && count2 == 1) {
+      //GOD
+       Serial.println(4022);
+      delay(1000);
+
+    } else if (count4 == 1 && count3 != 1 && count2 == 1) {
+      //PRINCESS
+       Serial.println(4033);
+      delay(1000);
+
+    } else if (count4 != 1 && count3 == 1 && count2 != 1) {
+      //GIRL
+       Serial.println(4044);
+      delay(1000);
+
+    }
+
+  }
+}
