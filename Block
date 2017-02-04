@@ -1,0 +1,124 @@
+//The cons is you cannot avoid pushing repeatly or push a button and hold it for a while
+// You should fixed the error!!
+// Cannot set the volumn
+
+
+#include <TMRpcm.h>
+
+#include <SPI.h>
+#include <SD.h>
+
+char mychar;
+const int CS_PIN = 10;
+int inPin = 8;   // choose the input pin (for a pushbutton)
+int inPin2 = 2;
+int inPin3 = 3;
+int inPin4 = 4;
+
+int val = 0;     // variable for reading the pin status
+int val2 = 0;
+int val3 = 0;
+int val4 = 0;
+
+
+int count = 0; // count NO. of sound
+int state = 0; //state
+
+
+
+TMRpcm tmrpcm;
+
+
+void setup() {
+  tmrpcm.speakerPin = 9;
+  pinMode(inPin, INPUT);// declear pushbutton as an input
+  pinMode(inPin2, INPUT);
+  pinMode(inPin3, INPUT);
+  pinMode(inPin4, INPUT);
+
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  Serial.println("Initializing Card");
+  pinMode(CS_PIN, OUTPUT);
+  if (!SD.begin(CS_PIN)) {
+    Serial.println("Card Failure");
+    return;
+  }
+  Serial.println("Card Ready");
+
+}
+
+void loop() {
+  val = digitalRead(inPin);
+  val2 = digitalRead(inPin2);
+  val3 = digitalRead(inPin3);
+  val4 = digitalRead(inPin4);
+
+  //control state
+  /*if (val2 == HIGH && val3 == HIGH && val4 == HIGH){state =0;}
+    else if (val2 == LOW && val3 == HIGH && val4 == HIGH){state =1;}
+    else if (val2 == HIGH && val3 == LOW && val4 == HIGH){state =2;}
+    else if (val2 == HIGH && val3 == HIGH && val4 == LOW){state =3;}
+    else if (val2 == LOW && val3 == LOW && val4 == LOW){state =4;}
+    else {state = 0;}*/
+
+
+
+
+  if (val2 == HIGH && val3 == HIGH && val4 == HIGH) {
+
+    if (val == LOW && count == 0 ) { //check if the input is HIGH (button released)
+
+      tmrpcm.play("g00.wav");
+      count = 0;
+
+      delay(7000);
+
+    }   else {
+      delay(100);
+    }
+
+  } else if (val2 == LOW && val3 == HIGH && val4 == HIGH) {
+
+   
+
+
+   
+  
+      tmrpcm.play("g10.wav"); //do this line first always
+      
+      delay(10000);
+    
+
+
+  } else if (val2 == HIGH && val3 == LOW && val4 == HIGH) {
+    tmrpcm.play("g20.wav"); //do this line first always
+
+    delay(11000);
+
+
+  } else if (val2 == HIGH && val3 == HIGH && val4 == LOW) {
+    tmrpcm.play("g30.wav");
+
+    delay(8000);
+
+  } else if (val2 == LOW && val3 == LOW && val4 == LOW) {
+    tmrpcm.play("g40.wav");
+
+    delay(10000);
+
+  } else {
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+}
