@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private float mPreviousX;
     private float mPreviousY;
-
+   // private RelativeLayout mainLayout;
+//mainLayout for make it click anywhere
 
 
     //
@@ -96,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+       // setContentView(R.layout.mainLayout);
         btnSpeak = (Button) findViewById(R.id.btnSpeak);
         txtSpeechInput = (TextView) findViewById(R.id.txtSpeechInput);
 
@@ -132,6 +135,23 @@ public class MainActivity extends AppCompatActivity {
                 promptSpeechInput();
             }
         });
+        //  changed right up here
+
+
+        // Following code just be added 4/2/17 17:48
+  /*      mainLayout=(RelativeLayout)findViewById(R.id.mainLayout);
+
+        mainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+
+                // here you can write code to proceed next step.
+                promptSpeechInput();
+            }
+        });*/
+        // end 4/2/17 17:48
+
+
        /* btnOn.setOnClickListener(new View.OnClickListener()
         {
             @Override
